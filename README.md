@@ -4,4 +4,4 @@ Public Swagger documentation for my private, unofficial NUS NextBus reverse-engi
 
 Inspired by [SuibianP/nus-nextbus-new-api](https://suibianp.github.io/nus-nextbus-new-api/). This was created after the documented upstream endpoint moved and the previous integration stopped working.
 
-See [DISCLAIMER.md](DISCLAIMER.md) before using this documentation.
+See [DISCLAIMER.md](DISCLAIMER.md)
