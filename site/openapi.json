@@ -1,0 +1,874 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "NUS NextBus API (Unofficial)",
+    "description": "Unofficial personal project for my personal use only. Not affiliated with, endorsed by, or operated by the National University of Singapore or its service providers.\n\nInspired by [SuibianP/nus-nextbus-new-api](https://suibianp.github.io/nus-nextbus-new-api/). This adapter was created after the documented upstream endpoint moved and the previous integration stopped working.\n\nMaintained by [@raihahahan](https://github.com/raihahahan).",
+    "license": {
+      "name": "MIT (adapter code only)",
+      "identifier": "MIT"
+    },
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/health": {
+      "get": {
+        "tags": [
+          "meta"
+        ],
+        "summary": "Health",
+        "operationId": "health_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthResponse"
+                },
+                "example": {
+                  "status": "ok",
+                  "configured": true,
+                  "upstream_checked": false,
+                  "version": "0.1.0"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ]
+      }
+    },
+    "/v1/stops": {
+      "get": {
+        "tags": [
+          "bus"
+        ],
+        "summary": "Stops",
+        "operationId": "stops_v1_stops_get",
+        "responses": {
+          "200": {
+            "description": "Successful response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseEnvelope_BusStopsData_"
+                },
+                "example": {
+                  "source": "univus",
+                  "fetched_at": "2026-11-07T04:47:45.932802+00:00",
+                  "data": {
+                    "busstops": [
+                      {
+                        "caption": "Prince George's Park",
+                        "name": "PGP",
+                        "LongName": "Prince George's Park",
+                        "ShortName": "PGP",
+                        "latitude": 1.291765,
+                        "longitude": 103.780419
+                      },
+                      {
+                        "caption": "Kent Ridge MRT",
+                        "name": "KR-MRT",
+                        "LongName": "Kent Ridge MRT",
+                        "ShortName": "KR MRT",
+                        "latitude": 1.29482,
+                        "longitude": 103.784413
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ]
+      }
+    },
+    "/v1/stops/{stop}/arrivals": {
+      "get": {
+        "tags": [
+          "bus"
+        ],
+        "summary": "Arrivals",
+        "operationId": "arrivals_v1_stops__stop__arrivals_get",
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "stop",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9-]{1,32}$",
+              "title": "Stop"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseEnvelope_ArrivalsData_"
+                },
+                "example": {
+                  "source": "univus",
+                  "fetched_at": "2026-11-07T04:47:45.932802+00:00",
+                  "data": {
+                    "TimeStamp": "2026-11-07T12:47:45+08:00",
+                    "caption": "University Town",
+                    "name": "UTOWN",
+                    "shuttles": [
+                      {
+                        "name": "D1",
+                        "routeid": 3,
+                        "busstopcode": "UTOWN",
+                        "_etas": [
+                          {
+                            "eta": 180,
+                            "eta_s": 180,
+                            "ts": "2026-11-07T12:47:45+08:00",
+                            "plate": "PA1234X",
+                            "jobid": 12345,
+                            "px": "1.3039,103.7738"
+                          }
+                        ],
+                        "arrivalTime": "3",
+                        "nextArrivalTime": "8",
+                        "passengers": "Seats Available",
+                        "nextPassengers": "Seats Available",
+                        "arrivalTime_veh_plate": "PA1234X",
+                        "nextArrivalTime_veh_plate": "PA5678X"
+                      }
+                    ],
+                    "hints": []
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/routes/{route}/active-buses": {
+      "get": {
+        "tags": [
+          "bus"
+        ],
+        "summary": "Active Buses",
+        "operationId": "active_buses_v1_routes__route__active_buses_get",
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "route",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9-]{1,32}$",
+              "title": "Route"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseEnvelope_ActiveBusesData_"
+                },
+                "example": {
+                  "source": "univus",
+                  "fetched_at": "2026-11-07T04:47:45.932802+00:00",
+                  "data": {
+                    "TimeStamp": "2026-11-07T12:47:45+08:00",
+                    "ActiveBusCount": "1",
+                    "activebus": [
+                      {
+                        "vehplate": "PA1234X",
+                        "lat": 1.3039,
+                        "lng": 103.7738,
+                        "speed": 18,
+                        "direction": 92.5,
+                        "loadInfo": {
+                          "occupancy": 0.35,
+                          "crowdLevel": "low",
+                          "capacity": 80,
+                          "ridership": 28
+                        }
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/announcements": {
+      "get": {
+        "tags": [
+          "bus"
+        ],
+        "summary": "Announcements",
+        "operationId": "announcements_v1_announcements_get",
+        "responses": {
+          "200": {
+            "description": "Successful response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseEnvelope_AnnouncementsData_"
+                },
+                "example": {
+                  "source": "univus",
+                  "fetched_at": "2026-11-07T04:47:45.932802+00:00",
+                  "data": {
+                    "TimeStamp": "2026-11-07T12:47:45+08:00",
+                    "TickerTape": [
+                      {
+                        "ID": "123",
+                        "Message": "Example shuttle service notice.",
+                        "Status": "Enabled",
+                        "Priority": "1",
+                        "Display_From": "2026-11-07T08:00:00+08:00",
+                        "Display_To": "2026-11-07T23:00:00+08:00",
+                        "Affected_Service_Ids": "D1,D2",
+                        "Created_On": "2026-11-07T08:00:00+08:00",
+                        "Created_By": "NUS"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ActiveBus": {
+        "properties": {
+          "vehplate": {
+            "type": "string",
+            "title": "Vehplate"
+          },
+          "lat": {
+            "type": "number",
+            "title": "Lat"
+          },
+          "lng": {
+            "type": "number",
+            "title": "Lng"
+          },
+          "speed": {
+            "type": "integer",
+            "title": "Speed"
+          },
+          "direction": {
+            "type": "number",
+            "title": "Direction"
+          },
+          "loadInfo": {
+            "$ref": "#/components/schemas/VehicleLoad"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "vehplate",
+          "lat",
+          "lng",
+          "speed",
+          "direction",
+          "loadInfo"
+        ],
+        "title": "ActiveBus"
+      },
+      "ActiveBusesData": {
+        "properties": {
+          "TimeStamp": {
+            "type": "string",
+            "title": "Timestamp"
+          },
+          "ActiveBusCount": {
+            "type": "string",
+            "title": "Activebuscount"
+          },
+          "activebus": {
+            "items": {
+              "$ref": "#/components/schemas/ActiveBus"
+            },
+            "type": "array",
+            "title": "Activebus"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "TimeStamp",
+          "ActiveBusCount",
+          "activebus"
+        ],
+        "title": "ActiveBusesData"
+      },
+      "AnnouncementsData": {
+        "properties": {
+          "TimeStamp": {
+            "type": "string",
+            "title": "Timestamp"
+          },
+          "TickerTape": {
+            "items": {
+              "$ref": "#/components/schemas/TickerTape"
+            },
+            "type": "array",
+            "title": "Tickertape"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "TimeStamp",
+          "TickerTape"
+        ],
+        "title": "AnnouncementsData"
+      },
+      "ArrivalsData": {
+        "properties": {
+          "TimeStamp": {
+            "type": "string",
+            "title": "Timestamp"
+          },
+          "caption": {
+            "type": "string",
+            "title": "Caption"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "shuttles": {
+            "items": {
+              "$ref": "#/components/schemas/ShuttleArrival"
+            },
+            "type": "array",
+            "title": "Shuttles"
+          },
+          "hints": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Hints"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "TimeStamp",
+          "caption",
+          "name",
+          "shuttles",
+          "hints"
+        ],
+        "title": "ArrivalsData"
+      },
+      "BusEta": {
+        "properties": {
+          "eta": {
+            "type": "integer",
+            "title": "Eta"
+          },
+          "eta_s": {
+            "type": "integer",
+            "title": "Eta S"
+          },
+          "ts": {
+            "type": "string",
+            "title": "Ts"
+          },
+          "plate": {
+            "type": "string",
+            "title": "Plate"
+          },
+          "jobid": {
+            "type": "integer",
+            "title": "Jobid"
+          },
+          "px": {
+            "type": "string",
+            "title": "Px"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "eta",
+          "eta_s",
+          "ts",
+          "plate",
+          "jobid",
+          "px"
+        ],
+        "title": "BusEta"
+      },
+      "BusStop": {
+        "properties": {
+          "caption": {
+            "type": "string",
+            "title": "Caption"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "LongName": {
+            "type": "string",
+            "title": "Longname"
+          },
+          "ShortName": {
+            "type": "string",
+            "title": "Shortname"
+          },
+          "latitude": {
+            "type": "number",
+            "title": "Latitude"
+          },
+          "longitude": {
+            "type": "number",
+            "title": "Longitude"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "caption",
+          "name",
+          "LongName",
+          "ShortName",
+          "latitude",
+          "longitude"
+        ],
+        "title": "BusStop"
+      },
+      "BusStopsData": {
+        "properties": {
+          "busstops": {
+            "items": {
+              "$ref": "#/components/schemas/BusStop"
+            },
+            "type": "array",
+            "title": "Busstops"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "busstops"
+        ],
+        "title": "BusStopsData"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "HealthResponse": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "configured": {
+            "type": "boolean",
+            "title": "Configured"
+          },
+          "upstream_checked": {
+            "type": "boolean",
+            "title": "Upstream Checked"
+          },
+          "version": {
+            "type": "string",
+            "title": "Version"
+          }
+        },
+        "type": "object",
+        "required": [
+          "status",
+          "configured",
+          "upstream_checked",
+          "version"
+        ],
+        "title": "HealthResponse"
+      },
+      "ResponseEnvelope_ActiveBusesData_": {
+        "properties": {
+          "source": {
+            "type": "string",
+            "title": "Source"
+          },
+          "fetched_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Fetched At"
+          },
+          "data": {
+            "$ref": "#/components/schemas/ActiveBusesData"
+          }
+        },
+        "type": "object",
+        "required": [
+          "source",
+          "fetched_at",
+          "data"
+        ],
+        "title": "ResponseEnvelope[ActiveBusesData]"
+      },
+      "ResponseEnvelope_AnnouncementsData_": {
+        "properties": {
+          "source": {
+            "type": "string",
+            "title": "Source"
+          },
+          "fetched_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Fetched At"
+          },
+          "data": {
+            "$ref": "#/components/schemas/AnnouncementsData"
+          }
+        },
+        "type": "object",
+        "required": [
+          "source",
+          "fetched_at",
+          "data"
+        ],
+        "title": "ResponseEnvelope[AnnouncementsData]"
+      },
+      "ResponseEnvelope_ArrivalsData_": {
+        "properties": {
+          "source": {
+            "type": "string",
+            "title": "Source"
+          },
+          "fetched_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Fetched At"
+          },
+          "data": {
+            "$ref": "#/components/schemas/ArrivalsData"
+          }
+        },
+        "type": "object",
+        "required": [
+          "source",
+          "fetched_at",
+          "data"
+        ],
+        "title": "ResponseEnvelope[ArrivalsData]"
+      },
+      "ResponseEnvelope_BusStopsData_": {
+        "properties": {
+          "source": {
+            "type": "string",
+            "title": "Source"
+          },
+          "fetched_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Fetched At"
+          },
+          "data": {
+            "$ref": "#/components/schemas/BusStopsData"
+          }
+        },
+        "type": "object",
+        "required": [
+          "source",
+          "fetched_at",
+          "data"
+        ],
+        "title": "ResponseEnvelope[BusStopsData]"
+      },
+      "ShuttleArrival": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "routeid": {
+            "type": "integer",
+            "title": "Routeid"
+          },
+          "busstopcode": {
+            "type": "string",
+            "title": "Busstopcode"
+          },
+          "_etas": {
+            "items": {
+              "$ref": "#/components/schemas/BusEta"
+            },
+            "type": "array",
+            "title": "Etas"
+          },
+          "arrivalTime": {
+            "type": "string",
+            "title": "Arrivaltime"
+          },
+          "nextArrivalTime": {
+            "type": "string",
+            "title": "Nextarrivaltime"
+          },
+          "passengers": {
+            "type": "string",
+            "title": "Passengers"
+          },
+          "nextPassengers": {
+            "type": "string",
+            "title": "Nextpassengers"
+          },
+          "arrivalTime_veh_plate": {
+            "type": "string",
+            "title": "Arrivaltime Veh Plate"
+          },
+          "nextArrivalTime_veh_plate": {
+            "type": "string",
+            "title": "Nextarrivaltime Veh Plate"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "name",
+          "routeid",
+          "busstopcode",
+          "_etas",
+          "arrivalTime",
+          "nextArrivalTime",
+          "passengers",
+          "nextPassengers",
+          "arrivalTime_veh_plate",
+          "nextArrivalTime_veh_plate"
+        ],
+        "title": "ShuttleArrival"
+      },
+      "TickerTape": {
+        "properties": {
+          "ID": {
+            "type": "string",
+            "title": "Id"
+          },
+          "Message": {
+            "type": "string",
+            "title": "Message"
+          },
+          "Status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "Priority": {
+            "type": "string",
+            "title": "Priority"
+          },
+          "Display_From": {
+            "type": "string",
+            "title": "Display From"
+          },
+          "Display_To": {
+            "type": "string",
+            "title": "Display To"
+          },
+          "Affected_Service_Ids": {
+            "type": "string",
+            "title": "Affected Service Ids"
+          },
+          "Accident_Latitude": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Accident Latitude"
+          },
+          "Accident_Longitude": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Accident Longitude"
+          },
+          "Created_On": {
+            "type": "string",
+            "title": "Created On"
+          },
+          "Created_By": {
+            "type": "string",
+            "title": "Created By"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "ID",
+          "Message",
+          "Status",
+          "Priority",
+          "Display_From",
+          "Display_To",
+          "Affected_Service_Ids",
+          "Accident_Latitude",
+          "Accident_Longitude",
+          "Created_On",
+          "Created_By"
+        ],
+        "title": "TickerTape"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      },
+      "VehicleLoad": {
+        "properties": {
+          "occupancy": {
+            "type": "number",
+            "title": "Occupancy"
+          },
+          "crowdLevel": {
+            "type": "string",
+            "title": "Crowdlevel"
+          },
+          "capacity": {
+            "type": "integer",
+            "title": "Capacity"
+          },
+          "ridership": {
+            "type": "integer",
+            "title": "Ridership"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "occupancy",
+          "crowdLevel",
+          "capacity",
+          "ridership"
+        ],
+        "title": "VehicleLoad"
+      }
+    },
+    "securitySchemes": {
+      "APIKeyHeader": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-API-Key"
+      }
+    }
+  },
+  "servers": [
+    {
+      "url": "http://127.0.0.1:8000"
+    }
+  ]
+}

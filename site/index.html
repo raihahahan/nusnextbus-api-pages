@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>NUS NextBus API (Unofficial)</title>
+    <link rel="stylesheet" href="https://unpkg.com/swagger-ui-dist@5/swagger-ui.css" />
+    <style>
+      .notice {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 10px 16px;
+        background: #fff4d6;
+        border-bottom: 1px solid #e0c36c;
+        color: #3b321c;
+        font: 14px/1.4 system-ui, sans-serif;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <p class="notice">
+      Unofficial personal project—not affiliated with or endorsed by NUS.
+      <a href="https://github.com/raihahahan/nusnextbus-api-pages/blob/main/DISCLAIMER.md"
+        >Read the disclaimer.</a
+      >
+    </p>
+    <div id="swagger-ui"></div>
+    <script src="https://unpkg.com/swagger-ui-dist@5/swagger-ui-bundle.js"></script>
+    <script>
+      window.onload = () => {
+        SwaggerUIBundle({
+          url: "./openapi.json",
+          dom_id: "#swagger-ui",
+          deepLinking: true,
+          persistAuthorization: false,
+          displayRequestDuration: true,
+        });
+      };
+    </script>
+  </body>
+</html>
